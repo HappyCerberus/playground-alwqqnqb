@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 using namespace std;
 
 bool is_palindrome(const string& s) {
@@ -16,6 +17,34 @@ bool is_palindrome(const string& s) {
 	}
 
 	return l >= r;
+}
+
+bool is_palindrome_sentence(const string& s) {
+	if (s.length() == 0)
+		return true;
+
+	auto l = s.begin();
+	auto r = s.end()-1;
+
+	while (l < r) {
+		if (!isalnum(*l)) {
+			l++;
+			continue;
+		}
+
+		if (!isalnum(*r)) {
+			r--;
+			continue;
+		}
+
+		if (tolower(*l) != tolower(*r))
+			return false;
+
+		l++;
+		r--;
+	}
+
+	return true;
 }
 
 bool is_permuted_palindrome(const string& s) {
@@ -36,14 +65,18 @@ bool is_permuted_palindrome(const string& s) {
 
 int main() {
 
-	cout << boolalpha << "is_palindrome(\"a\") = " << is_palindrome("a") << endl;
-	cout << boolalpha << "is_palindrome(\"ab\") = " << is_palindrome("ab") << endl;
-	cout << boolalpha << "is_palindrome(\"\") = " << is_palindrome("") << endl;
-	cout << boolalpha << "is_palindrome(\"aa\") = " << is_palindrome("aa") << endl;
+	vector<string> p1{"a", "ab", "", "aa"};
+	for (auto p : p1) {
+		cout << boolalpha << "is_palindrome(\"" << p << "\") = " << is_palindrome(p) << endl;
+	}
 
+	vector<string> p2{"Was it a car or a cat I saw?", "Murder for a jar of red rum!", "This is not a palindrome.", "?!,." };
+	for (auto p : p2) {
+		cout << boolalpha << "is_palindrome_sentence(\"" << p << "\") = " << is_palindrome_sentence(p) << endl;
+	}
 
-	cout << boolalpha << "is_permuted_palindrome(\"aabb\") = " << is_permuted_palindrome("aabb") << endl;
-	cout << boolalpha << "is_permuted_palindrome(\"aabbc\") = " << is_permuted_palindrome("aabbc") << endl;
-	cout << boolalpha << "is_permuted_palindrome(\"abc\") = " << is_permuted_palindrome("abc") << endl;
-
+	vector<string> p3{"aabb", "aabbc", "abc"};
+	for (auto p : p3) {
+		cout << boolalpha << "is_permuted_palindrome(\"" << p << "\") = " << is_permuted_palindrome(p) << endl;
+	}
 }
