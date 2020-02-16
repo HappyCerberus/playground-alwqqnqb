@@ -88,3 +88,11 @@ int main() {
 }
 // }
 ```
+
+### Complexity analysis
+
+In either case, we visit each character in the string once, leading to $`O(n)`$ time complexity. We only store two iterators, leading to $`O(1)`$ time complexity.
+
+## Creating a palindrome
+
+
