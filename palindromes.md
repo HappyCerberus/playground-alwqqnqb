@@ -99,7 +99,52 @@ Most palindrome related interview questions involve searching for palindromes wi
 
 ### Brute force $`O(n^2)`$ solution
 
+To find all the palindromes within a string we can use the same process we used for verifying a palindrome, but instead of starting from the outside we start from the center. Again, we need to keep in mind that a center of palindrome can be either one or two characters.
 
+```C++ runnable
+// { autofold
+#include <string>
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+using namespace std;
+// }
+string longest_palindrome(const string& s) {
+	pair<int,int> result(0,0);
+	int max = 0;
 
+	// for each potential center
+	for (int i = 0; i < s.length(); i++) {
+		auto grow = [&](int l, int r) {
+			while (l >= 0 && r < s.length() && s[l] == s[r]) {
+				l--;
+				r++;
+			}
 
+			if (max < r-l-1) {
+				result = make_pair(l+1, r);
+				max = r-l-1;
+			}
+		};
 
+		// center is a single letter
+		grow(i-1,i+1);
+
+		// two letter center
+		if (i+1 >= s.length() || s[i] != s[i+1])
+			continue;
+
+		grow(i-1,i+2);
+	}
+
+	return s.substr(result.first, result.second-result.first);
+}
+// { autofold
+int main() {
+	vector<string> p4{"aabb", "aabac", "xaaxy", "xyz", ""};
+	for (auto p : p4) {
+		cout << boolalpha << "longest_palindrome(\"" << p << "\") = " << longest_palindrome(p) << endl;
+	}
+}
+// }
+```
