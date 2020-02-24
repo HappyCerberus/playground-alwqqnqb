@@ -93,6 +93,13 @@ int main() {
 
 In either case, we visit each character in the string once, leading to $`O(n)`$ time complexity. We only store two iterators, leading to $`O(1)`$ time complexity.
 
-## Creating a palindrome
+## Searching for palindromes
+
+Most palindrome related interview questions involve searching for palindromes within a given string. This can be finding the longest palindrome, splitting a string into palindromes, or simply returning all the palindromes contained within a string.
+
+### Brute force $`O(n^2)`$ solution
+
+
+
 
 
