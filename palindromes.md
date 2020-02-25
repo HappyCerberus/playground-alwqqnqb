@@ -156,11 +156,11 @@ We can extend the code to return all palindromes by simply emmiting each palindr
 Our search `grow` lambda is $`O(n)`$ time complexity, since we invoke it for each position in the string (potentially twice) we end up with $`O(n^2)`$ time complexity.
 Space complexity is $`O(1)`$ since the only thing we are storing are the maximum palindrome length and its boundaries.
 
-## The $`O(n)`$ solution - Manacher's algorithm
+### The $`O(n)`$ solution - Manacher's algorithm
 
-Let's look at our brute force solution: What is the extra work that we are doing? Well, we keep re-checking the same characters multiple times, since we start the growth of the palindrome from each potential center.
+Let's look at our brute force solution: What is the extra work that we are doing? Well, we keep re-checking the same characters multiple times, since we start the growth of the palindrome from each potential center. Can we exploit the properties of palindromes in some way?
 
-Can we exploit the properties of palindromes in some way? Let's consider a string `yabacabax`. If we just determined that the palindrome with the center `c` is length `7`, can we use this information for the following potential centers? Indeed, for this particular case, we can simply re-use the information from the mirrored section, since the palindromes with centers in `a`, `b`, and `a` are all fully contained within the bigger palindrome at center `c`.
+Let's consider a string `yabacabax`. If we just determined that the palindrome with the center `c` is length `7`, can we use this information for the following potential centers? Indeed, for this particular case, we can simply re-use the information from the mirrored section, since the palindromes with centers in `a`, `b`, and `a` are all fully contained within the bigger palindrome at center `c`.
 
 In actuality there are 3 situations we can run into:
 
@@ -173,6 +173,8 @@ For case 1, we can simply copy the information, since the palindrome is fully co
 For case 2, let's consider an example. `xabaxcxabay`, the palindrome at center `c` is `abaxcxaba`. What can we say about the palindrome at center `b`? Well, it's mirrored palindrome extends beyond the left side of the bigger palindrome. Is it possible that it extends past the right side of the palindrome? It isn't, if it did, the entire string would have to be `xabaxcxabax`, but then the palindrome at center `c` would be the entire string.
 
 For case 3, this is the only case where we can't determine the length of the palindrome from the mirrored section. We at least know that the part fully contianed within the greater palindrome is already a palindrome, so we can continue checking just after the greater palindrome.
+
+We still need to deal with one small problem. This algorithm relies on having a center of a palindrome be a single character. Fortnuatelly we can simply pad the string with special characters, in which case if the center of the string is inbetween two characters, it will now be on the special character.
 
 ```C++ runnable
 // { autofold
@@ -254,3 +256,8 @@ int main() {
 ```
 
 Since we calculate maximum palindrome at each center this way, the algorithm can be used as basis for solutions that require more than just the maximum palindrome. 
+
+#### Complexity analysis
+
+All the iterators in our solution are monotonically increasing, leading to $`O(n)`$ time complexity.
+Since we store the lengths of iterators at each center, this solution has $`O(n)`$ space complexity.
