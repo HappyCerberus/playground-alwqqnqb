@@ -148,3 +148,109 @@ int main() {
 }
 // }
 ```
+
+We can extend the code to return all palindromes by simply emmiting each palindrome when its encountered in the `grow` lambda.
+
+#### Complexity analysis
+
+Our search `grow` lambda is $`O(n)`$ time complexity, since we invoke it for each position in the string (potentially twice) we end up with $`O(n^2)`$ time complexity.
+Space complexity is $`O(1)`$ since the only thing we are storing are the maximum palindrome length and its boundaries.
+
+## The $`O(n)`$ solution - Manacher's algorithm
+
+Let's look at our brute force solution: What is the extra work that we are doing? Well, we keep re-checking the same characters multiple times, since we start the growth of the palindrome from each potential center.
+
+Can we exploit the properties of palindromes in some way? Let's consider a string `yabacabax`. If we just determined that the palindrome with the center `c` is length `7`, can we use this information for the following potential centers? Indeed, for this particular case, we can simply re-use the information from the mirrored section, since the palindromes with centers in `a`, `b`, and `a` are all fully contained within the bigger palindrome at center `c`.
+
+In actuality there are 3 situations we can run into:
+
+1. the palindrome at the mirrored position is fully contained within the bigger palindrome
+2. the palindrome at the mirrored position extendeds past the left border of the bigger palindrome
+3. the palindrome at the mirrored position is a prefix of the bigger palindrome (ends at the left border of the bigger palindrome)
+
+For case 1, we can simply copy the information, since the palindrome is fully contained, its mirror will be also fully contained.
+
+For case 2, let's consider an example. `xabaxcxabay`, the palindrome at center `c` is `abaxcxaba`. What can we say about the palindrome at center `b`? Well, it's mirrored palindrome extends beyond the left side of the bigger palindrome. Is it possible that it extends past the right side of the palindrome? It isn't, if it did, the entire string would have to be `xabaxcxabax`, but then the palindrome at center `c` would be the entire string.
+
+For case 3, this is the only case where we can't determine the length of the palindrome from the mirrored section. We at least know that the part fully contianed within the greater palindrome is already a palindrome, so we can continue checking just after the greater palindrome.
+
+```C++ runnable
+// { autofold
+#include <string>
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+using namespace std;
+// }
+string manacher(const string& s) {
+	int tail = 0;
+	int center = 0;
+	int max = 0;
+	int pos = 0;
+
+	string padded = "#";
+	for (auto c : s) {
+		padded += c;
+		padded += "#";
+	}
+	vector<int> length(padded.length(),0);
+
+	auto mirror = [](int it, int center) {
+		return center - (it - center); 
+	};
+	auto lborder = [](int center, int length) {
+		return center - (length-1)/2;
+	};
+
+	while (tail < padded.length()) {
+		// grow the palindrome at center
+		while (mirror(tail, center) >= 0 && tail < padded.length() && padded[tail] == padded[mirror(tail,center)]) {
+			tail++;
+		}
+
+		length[center] = (tail - center - 1)*2 + 1;
+		int left_border = lborder(center, length[center]);
+
+		if (length[center] > max) {
+			max = length[center];
+			pos = left_border;
+		}
+
+		int i = center+1;
+		while (i < tail) {
+			int m_i = mirror(i, center);
+			// case 1, fully contained
+			if (lborder(m_i, length[m_i]) > left_border) {
+				length[i] = length[m_i];
+			} else
+			// case 2, extending past left border
+			if (lborder(m_i, length[m_i]) < left_border) {
+				length[i] = (tail - i - 1)*2 + 1;
+			} else {
+			// case 3, proper prefix
+				break;
+			}
+			i++;
+		}
+		center = i;
+	}
+
+	string result;
+	for (int i = pos; i < pos+max; i++) {
+		if (padded[i] != '#') {
+			result += padded[i];
+		}
+	}
+	return result;
+}
+// { autofold
+int main() {
+	vector<string> p5{"xabaxcxabay", "aabac", "aaaa", "xyz", ""};
+	for (auto p : p5) {
+		cout << boolalpha << "manacher(\"" << p << "\") = " << manacher(p) << endl;
+	}
+}
+// }
+```
+
+Since we calculate maximum palindrome at each center this way, the algorithm can be used as basis for solutions that require more than just the maximum palindrome. 

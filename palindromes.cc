@@ -94,6 +94,68 @@ string longest_palindrome(const string& s) {
 	return s.substr(result.first, result.second-result.first);
 }
 
+string manacher(const string& s) {
+	int tail = 0;
+	int center = 0;
+	int max = 0;
+	int pos = 0;
+
+	string padded = "#";
+	for (auto c : s) {
+		padded += c;
+		padded += "#";
+	}
+	vector<int> length(padded.length(),0);
+
+	auto mirror = [](int it, int center) {
+		return center - (it - center); 
+	};
+	auto lborder = [](int center, int length) {
+		return center - (length-1)/2;
+	};
+
+	while (tail < padded.length()) {
+		// grow the palindrome at center
+		while (mirror(tail, center) >= 0 && tail < padded.length() && padded[tail] == padded[mirror(tail,center)]) {
+			tail++;
+		}
+
+		length[center] = (tail - center - 1)*2 + 1;
+		int left_border = lborder(center, length[center]);
+
+		if (length[center] > max) {
+			max = length[center];
+			pos = left_border;
+		}
+
+		int i = center+1;
+		while (i < tail) {
+			int m_i = mirror(i, center);
+			// case 1, fully contained
+			if (lborder(m_i, length[m_i]) > left_border) {
+				length[i] = length[m_i];
+			} else
+			// case 2, extending past left border
+			if (lborder(m_i, length[m_i]) < left_border) {
+				length[i] = (tail - i - 1)*2 + 1;
+			} else {
+			// case 3, proper prefix
+				break;
+			}
+			i++;
+		}
+		center = i;
+	}
+
+	string result;
+	for (int i = pos; i < pos+max; i++) {
+		if (padded[i] != '#') {
+			result += padded[i];
+		}
+	}
+	return result;
+}
+
 int main() {
 
 	vector<string> p1{"a", "ab", "", "aa"};
@@ -114,5 +176,10 @@ int main() {
 	vector<string> p4{"aabb", "aabac", "xaaxy", "xyz", ""};
 	for (auto p : p4) {
 		cout << boolalpha << "longest_palindrome(\"" << p << "\") = " << longest_palindrome(p) << endl;
+	}
+
+	vector<string> p5{"xabaxcxabay", "aabac", "xyz", "", "aaaa"};
+	for (auto p : p5) {
+		cout << boolalpha << "manacher(\"" << p << "\") = " << manacher(p) << endl;
 	}
 }
