@@ -270,7 +270,7 @@ For example: "Given a string, determine the minimum number of inserts to turn th
 
 ### Dynamic programming solution $`O(n^2)`$
 
-```c++ runnable
+```C++ runnable
 // { autofold
 #include <string>
 #include <iostream>
