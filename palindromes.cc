@@ -156,6 +156,35 @@ string manacher(const string& s) {
 	return result;
 }
 
+int min_inserts(const string& s) {
+	if (s == "") return 0;
+
+        vector<vector<int>> dp(s.length(), vector<int>(s.length(), 0));
+        
+        for (int j = 0; j < s.length()-1; j++) {
+            if (s[j] == s[j+1]) {
+                dp[j][j+1] = 0;    
+            } else {
+                dp[j][j+1] = 1;
+            }
+        }
+        
+        // every length
+        for (int i = 2; i < s.length(); i++) {
+            // every position
+            for (int j = s.length()-i-1; j >= 0; j--) {
+                if (s[j] == s[j+i]) {
+                    dp[j][j+i] = dp[j+1][j+i-1];
+                } else {
+                    dp[j][j+i] = 1 + min(dp[j+1][j + i], dp[j][j + i - 1]);
+                        
+                }
+            }
+        }
+        
+        return dp[0][s.length()-1];   
+}
+
 int main() {
 
 	vector<string> p1{"a", "ab", "", "aa"};
@@ -181,5 +210,10 @@ int main() {
 	vector<string> p5{"xabaxcxabay", "aabac", "xyz", "", "aaaa"};
 	for (auto p : p5) {
 		cout << boolalpha << "manacher(\"" << p << "\") = " << manacher(p) << endl;
+	}
+
+	vector<string> p6{"", "aabac", "xyz", "aaaa", "xabaxcxabay"};
+	for (auto p : p6) {
+		cout << "min_inserts(\"" << p << "\") = " << min_inserts(p) << endl;
 	}
 }
