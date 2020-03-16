@@ -330,3 +330,14 @@ int main() {
 #### Complexity analysis
 
 The two main loops are in the order of N each, leading to $`O(n^2)`$ time complexity. This particular implementation also has $`O(n^2)`$ (this can be optimized down to $`O(n)`$).
+
+***
+
+Previous:  [$`O(1)`$ data structure](https://tech.io/playgrounds/52828/common-coding-interview-questions-o1-data-structure)
+
+***
+
+[![CC-BY-SA](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+
+This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).
+Šimon Tóth 2020 (kontakt@simontoth.cz)
