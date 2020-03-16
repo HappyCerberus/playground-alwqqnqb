@@ -2,7 +2,7 @@
 
 Palindromes are a common topic for interview questions as they lend themselves to algorithmically interesting solutions.
 
-In this article we will go through several interview questions, each building on the previous ones.
+In this article we will go through several interview questions.
 
 ## Verifying a palindrome
 
