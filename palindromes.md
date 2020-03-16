@@ -270,6 +270,13 @@ For example: "Given a string, determine the minimum number of inserts to turn th
 
 ### Dynamic programming solution $`O(n^2)`$
 
+Let's consider when we need to make an insertion. If we start from the outside of the string, we only need to insert new character when we find a mismatch. However, then we need to be careful, the minimal number of insertions can be reached by inserting on either side of the string.
+
+We can express this as a recursive relationship. Given a substring, spanning from index $`i`$ to index $`j`$ we can have two situations:
+
+1. the characters at indexes $`i`$ and $`j`$ match, the number of required inserts is the same as for the substring spanning from $`i+1`$ to $`j-1`$.
+2. the characters at indexes $`i`$ and $`j`$ do not match, we need to make an edit. The number of required inserts is therefore $`1 + min(inserts(i+1, j), inserts(i, j-1))`$.
+
 ```C++ runnable
 // { autofold
 #include <string>
