@@ -277,6 +277,8 @@ We can express this as a recursive relationship. Given a substring, spanning fro
 1. the characters at indexes $`i`$ and $`j`$ match, the number of required inserts is the same as for the substring spanning from $`i+1`$ to $`j-1`$.
 2. the characters at indexes $`i`$ and $`j`$ do not match, we need to make an edit. The number of required inserts is therefore $`1 + min(inserts(i+1, j), inserts(i, j-1))`$.
 
+We can build this recursion bottom up, using dynamic programming. Single characters are palindromes, so they require zero edits. Two character sequences either require 0 (if the characters match), or 1 edit. Building up from there, we simply iterate over all the lengths of substrings and every starting position, using our recursive formula to determine the minimum number of edits.
+
 ```C++ runnable
 // { autofold
 #include <string>
@@ -291,6 +293,7 @@ int min_inserts(const string& s) {
 
     vector<vector<int>> dp(s.length(), vector<int>(s.length(), 0));
         
+    // Two character size palindromes.
     for (int j = 0; j < s.length()-1; j++) {
         if (s[j] == s[j+1]) {
             dp[j][j+1] = 0;    
@@ -324,4 +327,6 @@ int main() {
 // }
 ```
 
+#### Complexity analysis
 
+The two main loops are in the order of N each, leading to $`O(n^2)`$ time complexity. This particular implementation also has $`O(n^2)`$ (this can be optimized down to $`O(n)`$).
