@@ -282,30 +282,30 @@ int min_inserts(const string& s) {
 	if (s == "")
 		return 0;
 
-        vector<vector<int>> dp(s.length(), vector<int>(s.length(), 0));
+    vector<vector<int>> dp(s.length(), vector<int>(s.length(), 0));
         
-        for (int j = 0; j < s.length()-1; j++) {
-            if (s[j] == s[j+1]) {
-                dp[j][j+1] = 0;    
+    for (int j = 0; j < s.length()-1; j++) {
+        if (s[j] == s[j+1]) {
+            dp[j][j+1] = 0;    
+        } else {
+            dp[j][j+1] = 1;
+        }
+    }
+        
+    // every length
+    for (int i = 2; i < s.length(); i++) {
+        // every position
+        for (int j = s.length()-i-1; j >= 0; j--) {
+            if (s[j] == s[j+i]) {
+                dp[j][j+i] = dp[j+1][j+i-1];
             } else {
-                dp[j][j+1] = 1;
+                dp[j][j+i] = 1 + min(dp[j+1][j + i], dp[j][j + i - 1]);
+                    
             }
         }
-        
-        // every length
-        for (int i = 2; i < s.length(); i++) {
-            // every position
-            for (int j = s.length()-i-1; j >= 0; j--) {
-                if (s[j] == s[j+i]) {
-                    dp[j][j+i] = dp[j+1][j+i-1];
-                } else {
-                    dp[j][j+i] = 1 + min(dp[j+1][j + i], dp[j][j + i - 1]);
-                        
-                }
-            }
-        }
-        
-        return dp[0][s.length()-1];   
+    }
+    
+    return dp[0][s.length()-1];   
 }
 // { autofold
 int main() {
