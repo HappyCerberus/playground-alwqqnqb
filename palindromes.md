@@ -170,7 +170,7 @@ In actuality there are 3 situations we can run into:
 
 For case 1, we can simply copy the information, since the palindrome is fully contained, its mirror will be also fully contained.
 
-For case 2, let's consider an example. `xabaxcxabay`, the palindrome at center `c` is `abaxcxaba`. What can we say about the palindrome at center `b`? Well, it's mirrored palindrome extends beyond the left side of the bigger palindrome. Is it possible that it extends past the right side of the palindrome? It isn't, if it did, the entire string would have to be `xabaxcxabax`, but then the palindrome at center `c` would be the entire string.
+For case 2, let's consider an example. `xabaxcxabay`, the palindrome at center `c` is `abaxcxaba`. What can we say about the palindrome at center `b`? Well, it's mirrored palindrome extends beyond the left side of the bigger palindrome. Is it possible that it extends past the right side of the palindrome? It isn't possible. If the palindrome at center `b` extended past the right side of the palindrome, the entire string would have to be `xabaxcxabax`. But that is in conflict with palindrome at center `c` being `abaxcxaba`.
 
 For case 3, this is the only case where we can't determine the length of the palindrome from the mirrored section. We at least know that the part fully contianed within the greater palindrome is already a palindrome, so we can continue checking just after the greater palindrome.
 
